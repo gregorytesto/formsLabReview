@@ -25,6 +25,7 @@ describe("bonus", () => {
     cy.get("select").should("have.value", "");
 
     cy.get("input").clear().type("a,b,c");
+    cy.get("select").select("sum");
     cy.get("button").click();
 
     cy.get("input").should("have.value", "a,b,c");
