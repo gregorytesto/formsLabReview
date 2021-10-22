@@ -16,8 +16,15 @@ describe("bonus", () => {
   });
 
   it("does not clear the inputs if given an invalid input", () => {
-    cy.get("input").type("a,b,c");
+    cy.get("input").type("1,2,3");
     cy.get("select").select("sum");
+    cy.get("button").click();
+
+    cy.contains("6");
+    cy.get("input").should("have.value", "");
+    cy.get("select").should("have.value", "");
+
+    cy.get("input").clear().type("a,b,c");
     cy.get("button").click();
 
     cy.get("input").should("have.value", "a,b,c");
