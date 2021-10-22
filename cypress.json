@@ -1,8 +1,10 @@
 {
-  "reporter": "junit",
-  "reporterOptions": {
-    "mochaFile": "reports/junit/junit-[hash].xml",
-    "testsuitesTitle": true,
-    "testCaseSwitchClassnameAndName": true
+  "cypress-watch-and-reload": {
+    "watch": "src/**/*.js"
+  },
+  "env": {
+    "cypress-react-selector": {
+      "root": "#root"
+    }
   }
 }

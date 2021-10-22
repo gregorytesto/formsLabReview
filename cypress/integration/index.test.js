@@ -1,6 +1,8 @@
 describe("index", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000");
+    const { PORT = 3000 } = process.env;
+    cy.visit(`http://localhost:${PORT}`);
+    cy.waitForReact();
   });
 
   it("says 'Invalid input.' if pressed with no input", () => {

@@ -1,54 +1,53 @@
 describe("bonus", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000");
+    const { PORT = 3000 } = process.env;
+    cy.visit(`http://localhost:${PORT}`);
+    cy.waitForReact();
   });
 
-  it("says 'Invalid input.' if pressed with no input", () => {
+  it("clears the inputs if given valid input", () => {
+    cy.get("input").type("1,2,3");
+    cy.get("select").select("sum");
     cy.get("button").click();
-    cy.contains("Invalid input.");
+
+    cy.contains("6");
+    cy.get("input").should("have.value", "");
+    cy.get("select").should("have.value", "");
   });
 
-  it("says 'Invalid input.' if pressed with invalid input", () => {
+  it("does not clear the inputs if given an invalid input", () => {
     cy.get("input").type("a,b,c");
+    cy.get("select").select("sum");
     cy.get("button").click();
+
+    cy.get("input").should("have.value", "a,b,c");
+    cy.get("select").should("have.value", "sum");
+  });
+
+  it("adds a class of `error` to both the `input` and `select` element if there is an error", () => {
+    cy.get("input").type("a,b,c");
+    cy.get("select").select("sum");
+    cy.get("button").click();
+
     cy.contains("Invalid input.");
+    cy.get("input").should("have.class", "error");
+    cy.get("select").should("have.class", "error");
   });
 
-  it("says the sum when that is the selected option", () => {
-    cy.get("input").type("3,5,15,7,5");
-    cy.get("select").select(["sum"]);
+  it("removes the `error` classes if the input is later changed to be correct", () => {
+    cy.get("input").type("a,b,c");
+    cy.get("select").select("sum");
     cy.get("button").click();
-    cy.contains("Sum: 35");
-  });
 
-  it("says the average when that is the selected option", () => {
-    cy.get("input").type("3,5,15,7,5");
-    cy.get("select").select(["average"]);
-    cy.get("button").click();
-    cy.contains("Average: 7");
-  });
+    cy.contains("Invalid input.");
+    cy.get("input").should("have.class", "error");
+    cy.get("select").should("have.class", "error");
 
-  it("says the mode when that is the selected option", () => {
-    cy.get("input").type("3,5,15,7,5");
-    cy.get("select").select(["mode"]);
+    cy.get("input").clear().type("1,3,5");
+    cy.get("select").select("sum");
     cy.get("button").click();
-    cy.contains("Mode: 5");
-  });
-
-  it("says the sum and average when those are the selected options", () => {
-    cy.get("input").type("3,5,15,7,5");
-    cy.get("select").select(["sum", "average"]);
-    cy.get("button").click();
-    cy.contains("Sum: 35");
-    cy.contains("Average: 7");
-  });
-
-  it("says all three when they are all selected", () => {
-    cy.get("input").type("3,5,15,7,5");
-    cy.get("select").select(["sum", "average", "mode"]);
-    cy.get("button").click();
-    cy.contains("Sum: 35");
-    cy.contains("Average: 7");
-    cy.contains("Mode: 5");
+    cy.contains("9");
+    cy.get("input").should("not.have.class", "error");
+    cy.get("select").should("not.have.class", "error");
   });
 });
