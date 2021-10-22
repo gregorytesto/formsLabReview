@@ -6,4 +6,4 @@ workflows:
     jobs:
       - cypress/run:
           start: npm start
-          command: npx cypress run ./cypress/index.test.js
+          command: npx cypress run --spec ./cypress/integration/index.test.js
